@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>LightInTheSched</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div>
+    <h1>Load-shedding Information:</h1>
+    <!--    <a href="/provinces" id="provinces">Provinces</a>-->
+    <h2 th:text="'Current load-shedding: '+${stage}"></h2>
+
+    <form action="/towns" method="post">
+        <label for="province">Select Province:</label>
+        <select id="province" name="province" onchange="submitForm()">
+            <option th:each="province : ${provinces}" th:value="${province}" th:text="${province}"></option>
+        </select>
+        <br>
+        <button type="submit">Get Towns</button>
+    </form>
+</div>
+
+</body>
+</html>
+

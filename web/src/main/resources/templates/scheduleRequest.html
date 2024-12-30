@@ -1,0 +1,73 @@
+<!-- <!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>LightInTheSched</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div>
+  <h1>Load-shedding Information:</h1>
+  <h2 th:text="'Current load-shedding: '+${stage}"></h2>
+
+  <form action="/schedule" method="post">
+    <label for="province">Select Province:</label>
+    <select id="province" name="province" onchange="submitForm()">
+      <option th:id="${province}" th:value="${province}" th:text="${province}"></option>
+    </select>
+    <br>
+    <label for="town">Select Town:</label>
+    <select id="town" name="town">
+      <option th:id="${town}" th:value="${town}" th:text="${town}"></option>
+    </select>
+    <br>
+    <button type="submit">Get Schedule</button>
+  </form>
+  <br>
+  <br>
+  <div>Schedule Page</div>
+  <div th:text = "${scheduleData}"></div>
+
+</div>
+
+</body>
+</html>
+
+ -->
+
+ <!DOCTYPE html>
+ <html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+     <title>LightInTheSched</title>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ </head>
+ <body>
+     <h1>Loadshedding Schedule for <span th:text="${selectedTown}"></span></h1>
+ 
+     <table>
+         <thead>
+             <tr>
+                 <th>Day</th>
+                 <th>Slots</th>
+             </tr>
+         </thead>
+         <tbody>
+             <!-- Iterate over days -->
+             <tr th:each="day, dayIndex : ${scheduleInfo.days}">
+                 <td th:text="${'Day ' + (dayIndex.index + 1)}"></td>
+                 <td>
+                     <!-- Iterate over slots within each day -->
+                     <ul th:each="slot : ${day.slots}">
+                         <li th:text="${'From ' + slot.start + ' to ' + slot.end}"></li>
+                     </ul>
+                 </td>
+             </tr>
+         </tbody>
+     </table>
+ </body>
+ </html>
+ 
+ 
