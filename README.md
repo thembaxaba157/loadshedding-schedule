@@ -1,11 +1,17 @@
 
 # ⚡ Load Shedding Distributed System
 
-A modular Java-based distributed system for managing and displaying load shedding schedules in South Africa. It uses Javalin for REST APIs, Thymeleaf for the web frontend, and ActiveMQ for inter-service messaging.
+[![Java](https://img.shields.io/badge/Java-17+-brightgreen.svg)](https://www.oracle.com/java/)
+[![Maven](https://img.shields.io/badge/Maven-Build-blue)](https://maven.apache.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
----
+A modular Java-based distributed system for managing and displaying load shedding schedules in South Africa. Built using Javalin for REST APIs, Thymeleaf for the web frontend, and Apache ActiveMQ for messaging.
+
 
 ## 📚 Table of Contents
+
+<details>
+  <summary>Click to expand</summary>
 
 - [Overview](#overview)
 - [Architecture](#architecture)
@@ -18,6 +24,8 @@ A modular Java-based distributed system for managing and displaying load sheddin
 - [API Overview](#api-overview)
 - [Contributing](#contributing)
 - [License](#license)
+
+</details>
 
 ---
 
@@ -57,74 +65,75 @@ The system consists of independent services that:
 ## 🧰 Tech Stack
 
 - **Java 17**
-- **Maven** for project management
-- **Javalin** for REST APIs
-- **Thymeleaf** for rendering HTML pages
-- **Apache ActiveMQ** for message passing
-- **Picocli** for command-line configuration
-- **Unirest** for internal HTTP client requests
+- **Maven**
+- **Javalin** (HTTP server)
+- **Thymeleaf** (HTML templating)
+- **Apache ActiveMQ**
+- **Picocli** (command-line args)
+- **Unirest** (HTTP client)
 
 ---
 
 ## ✨ Features
 
-- Query provinces and towns from a CSV-based database
-- Get or set the current load shedding stage
-- View schedules based on current stage and town
-- Real-time stage updates via pub-sub using ActiveMQ
-- Alerts sent to `ntfy.sh` for service errors
+- Province/town querying from a CSV
+- REST APIs for current stage & schedule
+- Thymeleaf frontend for browsing
+- Messaging system for real-time updates
+- Alerts via `ntfy.sh`
 
 ---
 
 ## 🧩 Service Descriptions
 
+<details>
+  <summary>Click to expand each</summary>
+
 ### `places`
-- Reads place data from a CSV.
-- Serves `/provinces` and `/towns/{province}` via HTTP.
+- Reads CSV data
+- Exposes `/provinces` and `/towns/{province}`
 
 ### `stages`
-- Provides `/stage` (GET) and `/stage` (POST).
-- Broadcasts new stage values to a **topic** on ActiveMQ.
+- Provides `/stage` (GET/POST)
+- Broadcasts changes to ActiveMQ topic
 
 ### `schedule`
-- Provides `/province/town` and `/province/town/stage`.
-- Generates mocked or dynamic schedules.
-- Subscribes to `stage` topic for updates.
+- Provides schedule endpoints
+- Subscribes to stage updates via topic
 
 ### `web`
-- Frontend using Javalin and Thymeleaf.
-- Displays the stage, allows province/town selection.
-- Subscribes to `stage` topic and listens for alerts.
+- Thymeleaf interface
+- Requests data from all services
+- Displays schedule and handles forms
+
+</details>
 
 ---
 
 ## 📬 Message Queuing
 
-- **Broker:** Apache ActiveMQ (default `tcp://localhost:61616`)
-- **Credentials:** `admin/admin`
-- **Topics/Queues:**
-  - `stage` — for broadcasting load shedding stages
-  - `alert` — for internal system alerts
+- **Broker**: Apache ActiveMQ (default: `tcp://localhost:61616`)
+- **Credentials**: `admin/admin`
+- **Topics/Queues**:
+  - `stage` — broadcast updates
+  - `alert` — error monitoring
 
 ---
 
 ## 🛠 Installation & Prerequisites
 
-### General Requirements
+### Requirements
 
-- Java 17+ installed
-- Maven installed
-- Apache ActiveMQ running locally
+- Java 17+
+- Maven
+- Apache ActiveMQ running
 
-### Install Apache ActiveMQ
+### Install ActiveMQ
 
 ```bash
-# Example for Mac (Homebrew)
-brew install activemq
+brew install activemq   # macOS
+# or download from https://activemq.apache.org/
 
-# Or manually download and extract from: https://activemq.apache.org/
-
-# Start ActiveMQ (default port: 61616)
 activemq start
 ```
 
@@ -132,52 +141,28 @@ activemq start
 
 ## 🚀 Running the System
 
-Each module is a separate Maven project. Run each from its own directory.
-
-### 1. Start ActiveMQ
-
-```bash
-activemq start
-```
-
-### 2. Build and run individual services
-
-#### Place Name Service
+Each module is separate. Start ActiveMQ and run:
 
 ```bash
 cd places
 mvn compile exec:java -Dexec.mainClass="wethinkcode.places.PlaceNameService" -Dexec.args="--port 7000 --datafile places.csv"
-```
 
-#### Stage Service
-
-```bash
 cd stage
 mvn compile exec:java -Dexec.mainClass="wethinkcode.stage.StageService"
-```
 
-#### Schedule Service
-
-```bash
 cd schedule
 mvn compile exec:java -Dexec.mainClass="wethinkcode.schedule.ScheduleService"
-```
 
-#### Web Frontend
-
-```bash
 cd web
 mvn compile exec:java -Dexec.mainClass="wethinkcode.web.WebService"
 ```
 
-### Who Can Run These Commands?
+### Who can run this?
 
 Anyone with:
-- A compatible Java setup (JDK 17+)
-- Maven properly installed
+- Java + Maven installed
 - ActiveMQ running
-
-This is suitable for devs, testers, and infrastructure engineers.
+- Appropriate access to `places.csv` data
 
 ---
 
@@ -197,15 +182,25 @@ This is suitable for devs, testers, and infrastructure engineers.
 
 ## 🤝 Contributing
 
-1. Fork the repo
-2. Create your feature branch (`git checkout -b feature/my-feature`)
-3. Commit your changes (`git commit -am 'Add feature'`)
-4. Push to the branch (`git push origin feature/my-feature`)
+1. Fork this repo
+2. Create a new branch: `git checkout -b feature/your-feature`
+3. Commit: `git commit -am 'Add feature'`
+4. Push: `git push origin feature/your-feature`
 5. Open a pull request
+
+---
+
+## 🚧 Possible Future Features
+
+- ✅ Real-time notifications via email/SMS
+- 📊 Dashboard with graphs and trends
+- 🔒 Admin portal to manage data and schedules
+- 🧠 Use of ML to predict future load shedding patterns
+- ☁️ Deployment using Docker/Kubernetes
+- 🔁 Historical data tracking and CSV export
 
 ---
 
 ## 📄 License
 
-MIT License. See `LICENSE` for details.
-
+This project is licensed under the MIT License — see [`LICENSE`](LICENSE) for details.
