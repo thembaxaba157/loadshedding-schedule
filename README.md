@@ -54,10 +54,10 @@ The system consists of independent services that:
               +---------------------+
                         |
                         v
-                +-----------------+
-                |      web        |
+                +-----------------------+
+                |      web              |
                 | (Javalin + Thymeleaf) |
-                +-----------------+
+                +-----------------------+
 ```
 
 ---
